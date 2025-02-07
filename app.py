@@ -95,9 +95,9 @@ def process_resume(file, location):
         result = setup_crewai(resume_text, location)
         
         # Parse results
-        feedback = result[0].output.raw
-        improved_resume = result[1].output.raw
-        jobs = result[2].output.raw
+        feedback = resume_feedback_task.output.raw.strip("```markdown").strip("```").strip()
+        improved_resume = resume_advisor_task.output.raw.strip("```markdown").strip("```").strip()
+        jobs = research_task.output.raw.strip("```markdown").strip("```").strip()
         
         return feedback, improved_resume, jobs
     
