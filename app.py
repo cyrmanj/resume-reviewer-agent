@@ -36,43 +36,48 @@ def setup_crewai(resume_text, location):
     # Set up agents
     resume_feedback = Agent(
         role="Professional Resume Advisor",
-        goal="Give feedback on resumes to make them stand out",
+        goal="Give feedback on the resume to make it stand out in the job market.",
         verbose=True,
-        backstory="Expert in resume optimization with keen eye for detail"
+        backstory="With a strategic mind and an eye for detail, you excel at providing feedback on resumes to highlight the most relevant skills and experiences."
     )
 
     resume_advisor = Agent(
         role="Professional Resume Writer",
-        goal="Rewrite resumes based on feedback",
+        goal="Based on the feedback recieved from Resume Advisor, make changes to the resume to make it stand out in the job market.",
         verbose=True,
-        backstory="Skilled at enhancing resume content and structure"
+        backstory= "With a strategic mind and an eye for detail, you excel at refining resumes based on the feedback to highlight the most relevant skills and experiences."
     )
 
     job_researcher = Agent(
         role="Senior Recruitment Consultant",
-        goal="Find relevant job openings",
+        goal="Find the 5 most relevant, recently posted jobs based on the improved resume recieved from resume advisor and the location preference",
         tools=[search_tool],
         verbose=True,
-        backstory="Expert in job market analysis and opportunities"
+        backstory="""As a senior recruitment consultant your prowess in finding the most relevant jobs based on the resume and location preference is unmatched. 
+    You can scan the resume efficiently, identify the most suitable job roles and search for the best suited recently posted open job positions at the preffered location."""
     )
 
     # Define tasks
     feedback_task = Task(
-        description=f"Analyze this resume and provide feedback: {resume_text}",
-        expected_output="Bullet-point feedback with overall score/10",
+        description= """Give feedback on the resume to make it stand out for recruiters. 
+        Review every section, inlcuding the summary, work experience, skills, and education. Suggest to add relevant sections if they are missing.  
+        Also give an overall score to the resume out of 10.  This is the resume: {resume_text}""",
+        expected_output="The overall score of the resume followed by the feedback in bullet points.",
         agent=resume_feedback
     )
 
     rewrite_task = Task(
-        description="Improve the resume based on feedback",
-        expected_output="Markdown formatted improved resume",
+        description= """Rewrite the resume based on the feedback to make it stand out for recruiters. You can adjust and enhance the resume but don't make up facts. 
+        Review and update every section, including the summary, work experience, skills, and education to better reflect the candidates abilities. This is the resume: {resume_text}""",
+        expected_output="Resume in markdown format that effectively highlights the candidate's qualifications and experiences",
         agent=resume_advisor,
         context=[feedback_task]
     )
 
     research_task = Task(
-        description=f"Find relevant jobs in {location}",
-        expected_output="Markdown list of top 5 job opportunities with links",
+        description="""Find the 5 most relevant recent job postings based on the resume recieved from resume advisor and location preference. This is the preferred location: {location} . 
+    Use the tools to gather relevant content and shortlist the 5 most relevant, recent, job openings""",
+        expected_output="A bullet point list of the 5 job openings, with the appropriate links and detailed description about each job, in markdown format", 
         agent=job_researcher
     )
 
@@ -95,8 +100,8 @@ def process_resume(file, location):
         result = setup_crewai(resume_text, location)
         
         # Parse results
-        feedback = resume_feedback_task.output.raw.strip("```markdown").strip("```").strip()
-        improved_resume = resume_advisor_task.output.raw.strip("```markdown").strip("```").strip()
+        feedback = feedback_task.output.raw.strip("```markdown").strip("```").strip()
+        improved_resume = rewrite_task.output.raw.strip("```markdown").strip("```").strip()
         jobs = research_task.output.raw.strip("```markdown").strip("```").strip()
         
         return feedback, improved_resume, jobs
