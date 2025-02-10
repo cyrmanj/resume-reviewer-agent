@@ -189,17 +189,38 @@ with gr.Blocks() as demo:
         job_roles_with_heading = f"## Relevant Job Roles:\n\n{job_roles}"
         return feedback_with_heading, improved_resume_with_heading, job_roles_with_heading
 
+#     submit_button.click(
+#         resume_agent,
+#         inputs=[resume_upload, location_input],
+#         outputs=[feedback_output, improved_resume_output, job_roles_output],
+#         show_progress=True
+#     ).then(
+#         format_outputs,
+#         inputs=[feedback_output, improved_resume_output, job_roles_output],
+#         outputs=[feedback_output, improved_resume_output, job_roles_output]
+#     )
+
+# demo.launch()
+
     submit_button.click(
+        lambda: gr.update(value="Processing..."),
+        inputs=[],
+        outputs=submit_button
+    ).then(
         resume_agent,
         inputs=[resume_upload, location_input],
-        outputs=[feedback_output, improved_resume_output, job_roles_output],
-        show_progress=True
+        outputs=[feedback_output, improved_resume_output, job_roles_output]
     ).then(
         format_outputs,
         inputs=[feedback_output, improved_resume_output, job_roles_output],
         outputs=[feedback_output, improved_resume_output, job_roles_output]
+    ).then(
+        lambda: gr.update(value="Submit"),
+        inputs=[],
+        outputs=submit_button
     )
 
+demo.queue()
 demo.launch()
 
 
