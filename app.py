@@ -130,12 +130,49 @@ def resume_agent(file_path, location):
 
 
 
+# with gr.Blocks() as demo:
+#     gr.Markdown("# Resume Feedback and Job Matching Tool")
+    
+#     with gr.Row():
+#         with gr.Column():
+#             resume_upload = gr.File(label="Upload Your Resume (PDF or DOCX)")
+#             location_input = gr.Textbox(label="Preferred Location", placeholder="e.g., San Francisco")
+#             submit_button = gr.Button("Submit")
+        
+#         with gr.Column():
+#             feedback_output = gr.Markdown(label="Resume Feedback")
+#             improved_resume_output = gr.Markdown(label="Improved Resume")
+#             job_roles_output = gr.Markdown(label="Relevant Job Roles")
+
+#     # Define the click event for the submit button
+#     def format_outputs(feedback, improved_resume, job_roles):
+#         # Add bold headings to each section
+#         feedback_with_heading = f"**RESUME FEEDBACK:**\n\n{feedback}"
+#         improved_resume_with_heading = f"**IMPROVED RESUME:**\n\n{improved_resume}"
+#         job_roles_with_heading = f"**RELEVANT JOB ROLES:**\n\n{job_roles}"
+#         return feedback_with_heading, improved_resume_with_heading, job_roles_with_heading
+
+#     submit_button.click(
+#         resume_agent,
+#         inputs=[resume_upload, location_input],
+#         outputs=[feedback_output, improved_resume_output, job_roles_output]
+#     ).then(
+#         format_outputs,
+#         inputs=[feedback_output, improved_resume_output, job_roles_output],
+#         outputs=[feedback_output, improved_resume_output, job_roles_output]
+#     )
+
+# demo.launch()
+
+
+# Gradio Interface
 with gr.Blocks() as demo:
     gr.Markdown("# Resume Feedback and Job Matching Tool")
+    gr.Markdown("*Expected Runtime: 1 Min*")
     
-    with gr.Row():
-        with gr.Column():
-            resume_upload = gr.File(label="Upload Your Resume (PDF or DOCX)")
+    with gr.Column():
+        with gr.Row():
+            resume_upload = gr.File(label="Upload Your Resume (PDF or DOCX)", height=120)
             location_input = gr.Textbox(label="Preferred Location", placeholder="e.g., San Francisco")
             submit_button = gr.Button("Submit")
         
@@ -147,15 +184,16 @@ with gr.Blocks() as demo:
     # Define the click event for the submit button
     def format_outputs(feedback, improved_resume, job_roles):
         # Add bold headings to each section
-        feedback_with_heading = f"**RESUME FEEDBACK:**\n\n{feedback}"
-        improved_resume_with_heading = f"**IMPROVED RESUME:**\n\n{improved_resume}"
-        job_roles_with_heading = f"**RELEVANT JOB ROLES:**\n\n{job_roles}"
+        feedback_with_heading = f"## Resume Feedback:**\n\n{feedback}"
+        improved_resume_with_heading = f"## Improved Resume:\n\n{improved_resume}"
+        job_roles_with_heading = f"## Relevant Job Roles:\n\n{job_roles}"
         return feedback_with_heading, improved_resume_with_heading, job_roles_with_heading
 
     submit_button.click(
         resume_agent,
         inputs=[resume_upload, location_input],
-        outputs=[feedback_output, improved_resume_output, job_roles_output]
+        outputs=[feedback_output, improved_resume_output, job_roles_output],
+        show_progress=True
     ).then(
         format_outputs,
         inputs=[feedback_output, improved_resume_output, job_roles_output],
