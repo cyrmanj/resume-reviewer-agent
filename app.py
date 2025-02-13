@@ -133,12 +133,18 @@ def resume_agent(file_path, location):
 with gr.Blocks() as demo:
     gr.Markdown("# Resume Feedback and Job Matching Tool")
     gr.Markdown("*Expected Runtime: 1 Min*")
-    
-    with gr.Column():
-        with gr.Row():
+
+    with gr.Row():
+        with gr.Column():
             resume_upload = gr.File(label="Upload Your Resume (PDF or DOCX)", height=120)
             location_input = gr.Textbox(label="Preferred Location", placeholder="e.g., San Francisco")
             submit_button = gr.Button("Submit")
+    
+    # with gr.Column():
+    #     with gr.Row():
+    #         resume_upload = gr.File(label="Upload Your Resume (PDF or DOCX)", height=120)
+    #         location_input = gr.Textbox(label="Preferred Location", placeholder="e.g., San Francisco")
+    #         submit_button = gr.Button("Submit")
         
         with gr.Column():
             feedback_output = gr.Markdown(label="Resume Feedback")
