@@ -1,5 +1,5 @@
-gradio
-crewai
-python-docx
-pymupdf
-crewai-tools
+PyMuPDF==1.23.26
+python-docx==1.1.0
+gradio==5.15.0
+crewai==0.70.1
+crewai-tools==0.12.1
